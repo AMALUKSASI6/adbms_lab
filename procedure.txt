@@ -1,0 +1,178 @@
+Procedure::
+Banking operation
+
+SQL> select * from account;
+
+ACCOUNT_NO ACCOUNTHOLDER_NAME      BALANCE
+---------- -------------------- ----------
+         1 Amalu                     1000
+         2 Sree                     5000
+         3 Arundhathi                     3500
+
+SQL> create or replace procedure withdraw(accno1 number,amt1 in number) is
+  2  begin
+  3  update account set balance = balance-amt1 where accno1 =accno1;
+  4  end;
+  5  /
+
+Procedure created.
+
+SQL> create or replace procedure deposit(accno1 number,amt1 in number) is
+  2  begin
+  3  update account set balance = balance-amt1 where accno1 =accno1;
+  4  end;
+  5  /
+
+Procedure created.
+
+SQL> declare
+  2  choice number;
+  3  accno1 number(5);
+  4  amount number(5);
+  5  begin
+  6  accno1:=&accno1;
+  7  choice:=&choice;
+  8  amount:=&amount;
+  9  if choice=1 then
+ 10  deposit(accno1,amount);
+ 11  else
+ 12  withdraw(accno1,amount);
+ 13  end if;
+ 14  end;
+ 15  /
+Enter value for accno1: 1
+old   6: accno1:=&accno1;
+new   6: accno1:=1;
+Enter value for choice: 2
+old   7: choice:=&choice;
+new   7: choice:=2;
+Enter value for amount: 500
+old   8: amount:=&amount;
+new   8: amount:=500;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from account;
+
+ACCOUNT_NO ACCOUNTHOLDER_NAME      BALANCE
+---------- -------------------- ----------
+         1 Amalu                     500
+         2 Sree                     4500
+         3 Arundhathi                     3000
+
+SQL> declare
+  2  choice number;
+  3  accno1 number(5);
+  4  amount number(5);
+  5  begin
+  6  accno1:=&accno1;
+  7  choice:=&choice;
+  8  amount:=&amount;
+  9  if choice=1 then
+ 10  deposit(accno1,amount);
+ 11  else
+ 12  withdraw(accno1,amount);
+ 13  end if;
+ 14  end;
+ 15  /
+Enter value for accno1: 1
+old   6: accno1:=&accno1;
+new   6: accno1:=1;
+Enter value for choice: 1
+old   7: choice:=&choice;
+new   7: choice:=1;
+Enter value for amount: 1000
+old   8: amount:=&amount;
+new   8: amount:=1000;
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from account;
+
+ACCOUNT_NO ACCOUNTHOLDER_NAME      BALANCE
+---------- -------------------- ----------
+         1 Amalu                     -500
+         2 Sree                     3500
+         3 Arundhathi                     2000
+
+Price updated
+SQL> create table product (product_id integer,product_name varchar(20),price number);
+
+Table created.
+
+SQL> insert into product values(&product_id,'&product_name',&price);
+Enter value for product_id: 101
+Enter value for product_name: Soap
+Enter value for price: 25
+old   1: insert into product values(&product_id,'&product_name',&price)
+new   1: insert into product values(101,'Soap',25)
+
+1 row created.
+
+SQL> insert into product values(&product_id,'&product_name',&price);
+Enter value for product_id: 102
+Enter value for product_name: Sweets
+Enter value for price: 200
+old   1: insert into product values(&product_id,'&product_name',&price)
+new   1: insert into product values(102,'Sweets',200)
+
+1 row created.
+
+SQL> insert into product values(&product_id,'&product_name',&price);
+Enter value for product_id: 103
+Enter value for product_name: Paste
+Enter value for price: 35
+old   1: insert into product values(&product_id,'&product_name',&price)
+new   1: insert into product values(103,'Paste',35)
+
+1 row created.
+
+SQL> insert into product values(&product_id,'&product_name',&price);
+Enter value for product_id: 104
+Enter value for product_name: Pen
+Enter value for price: 5
+old   1: insert into product values(&product_id,'&product_name',&price)
+new   1: insert into product values(104,'Pen',5)
+
+1 row created.
+
+SQL> select * from product;
+
+PRODUCT_ID PRODUCT_NAME              PRICE
+---------- -------------------- ----------
+       101 Soap                         25
+       102 Sweets                      200
+       103 Paste                        35
+       104 Pen                           5
+
+SQL> create or replace procedure product1(id number,total number) is
+  2  p number;
+  3  null_price exception;
+  4  begin
+  5  select price into p from product where product_id=id;
+  6  if p is null then
+  7  raise null_price;
+  8  else
+  9  update product set price=price+total where product_id=id;
+ 10  end if;
+ 11  exception
+ 12  when null_price then
+ 13  dbms_output.put_line('Price is null');
+ 14  end;
+ 15  /
+
+Procedure created.
+
+SQL> exec product1(102,100)
+
+PL/SQL procedure successfully completed.
+
+SQL> select * from product;
+
+PRODUCT_ID PRODUCT_NAME              PRICE
+---------- -------------------- ----------
+       101                       Soap                         25
+       102                   Sweets                      300
+       103                    Paste                        35
+       104                     Pen                           5
+***************************************************
